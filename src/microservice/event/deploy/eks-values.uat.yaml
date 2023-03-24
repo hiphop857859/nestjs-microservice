@@ -1,0 +1,42 @@
+fullnameOverride: event-service
+
+args: ['npm', 'run', 'start:prod']
+
+extraEnvVars:
+  - name: JWT_TOKEN_SECRET
+    value: Met@hop@SecrEtKeyS
+  - name: JWT_TOKEN_EXPIRES
+    value: '30'
+  - name: EVENT_SERVICE_MONGODB_URL
+    value: mongodb+srv://metahop-uat:eALXphlh18neaS0O@cluster0.2mcyw.mongodb.net/event
+  - name: EVENT_SERVICE_RABITMQ_URL
+    value: amqp://metahop_uat:h5x}N4p:FF8Q)+rj@rabbitmq.data.svc.cluster.local:5672
+  - name: EVENT_SERVICE_RABITMQ_QUEUE
+    value: event_queue
+  - name: ACTIVITY_SERVICE_RABITMQ_URL
+    value: amqp://metahop_uat:h5x}N4p:FF8Q)+rj@rabbitmq.data.svc.cluster.local:5672
+  - name: ACTIVITY_SERVICE_RABITMQ_QUEUE
+    value: activity_queue
+  - name: QUIZZ_SERVICE_RABITMQ_URL
+    value: amqp://metahop_uat:h5x}N4p:FF8Q)+rj@rabbitmq.data.svc.cluster.local:5672
+  - name: QUIZZ_SERVICE_RABITMQ_QUEUE
+    value: quizz_queue
+  - name: USER_SERVICE_RABITMQ_URL
+    value: amqp://metahop_uat:h5x}N4p:FF8Q)+rj@rabbitmq.data.svc.cluster.local:5672
+  - name: USER_SERVICE_RABITMQ_QUEUE
+    value: user_queue
+  - name: ASSET_URL
+    value: https://assets.jobhopin.com
+  - name: CDN_URL
+    value: https://cdn-staging.jobhopin.com
+  - name: DEFAULT_PAGE_SIZE
+    value: '20'
+
+nodeAffinityPreset:
+  type: "hard"
+
+livenessProbe:
+  path: /health
+
+readinessProbe:
+  path: /health

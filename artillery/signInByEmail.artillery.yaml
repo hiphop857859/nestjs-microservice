@@ -1,0 +1,23 @@
+config:
+  target: "http://localhost:8092/graphql"
+  phases:
+    - duration: 1
+      arrivalRate: 1
+      maxVusers: 1
+scenarios:
+  - name: "Spin"
+    flow:
+      - post:
+          url: "/"
+          json:
+            query: |
+             mutation signInByEmail{
+              signInByEmail(input : { 
+              email : "e2e-test@yopmail.com", 
+              password : "duylm@321",
+              deviceId : "DEVICE_ID_123456789"}) {
+                
+                  accessToken
+                  refreshToken
+                }
+              }

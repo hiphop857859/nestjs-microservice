@@ -1,0 +1,50 @@
+version: '3.7'
+services:
+  admin:
+    build: ./src/gateways/admin
+    restart: always
+    hostname: admin
+    env_file:
+      - .env
+    ports:
+      - '8080:3000'
+    networks:
+      - backend
+      - frontend
+    volumes:
+      - ./src/gateways/admin:/var/www/admin
+    command: npm run start:dev
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_management
+    environment:
+      - RABBITMQ_DEFAULT_USER=myuser
+      - RABBITMQ_DEFAULT_PASS=mypassword
+    ports:
+      # AMQP protocol port
+      - '5672:5672'
+      # HTTP management UI
+      - '15672:15672'
+    restart: always
+    networks:
+      - backend
+      - frontend
+  user:
+    build: ./src/microservices/user
+    restart: always
+    hostname: user
+    env_file:
+      - .env
+    networks:
+      - backend
+    volumes:
+      - ./src/microservices/user:/var/www/user
+    command: npm run start:dev
+
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    external:
+      name: infrastructure

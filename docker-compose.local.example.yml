@@ -1,0 +1,142 @@
+version: "3.7"
+services:
+
+  public:
+    build: ./src/gateways/public
+    restart: always
+    hostname: public
+    env_file:
+      - .env
+    ports:
+      - "8081:3000"
+    networks:
+      - backend
+      - frontend
+    volumes:
+      - ./src/gateways/public:/var/www/public
+    command: npm run start:dev
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_management
+    environment:
+      - RABBITMQ_DEFAULT_USER=myuser
+      - RABBITMQ_DEFAULT_PASS=mypassword
+    ports:
+      # AMQP protocol port
+      - "5672:5672"
+      # HTTP management UI
+      - "15672:15672"
+    restart: always
+    networks:
+      - backend
+      - frontend
+  metahop-bunny:
+    build: ./src/microservices/metahop-bunny
+    restart: always
+    hostname: metahop-bunny
+    env_file:
+      - .env
+    networks:
+      - backend
+    volumes:
+      - ./src/microservices/metahop-bunny:/var/www/metahop-bunny
+    command: npm run start:dev
+  metahop-auth:
+    build: ./src/microservices/metahop-auth
+    restart: always
+    hostname: metahop-auth
+    env_file:
+      - .env
+    networks:
+      - backend
+    volumes:
+      - ./src/microservices/metahop-auth:/var/www/metahop-auth
+    command: npm run start:dev
+  metahop-quizz:
+    build: ./src/microservices/metahop-quizz
+    restart: always
+    hostname: metahop-quizz
+    env_file:
+      - .env
+    networks:
+      - backend
+    volumes:
+      - ./src/microservices/metahop-quizz:/var/www/metahop-quizz
+    command: npm run start:dev
+  metahop-event:
+    build: ./src/microservices/metahop-event
+    restart: always
+    hostname: metahop-event
+    env_file:
+      - .env
+    networks:
+      - backend
+    volumes:
+      - ./src/microservices/metahop-event:/var/www/metahop-event
+    command: npm run start:dev
+  metahop-smartcontract:
+    build: ./src/microservices/metahop-smartcontract
+    restart: always
+    hostname: metahop-smartcontract
+    env_file:
+      - .env
+    networks:
+      - backend
+    volumes:
+      - ./src/microservices/metahop-smartcontract:/var/www/metahop-smartcontract
+    command: npm run start:dev
+  metahop-activity:
+    build: ./src/microservices/metahop-activity
+    restart: always
+    hostname: metahop-activity
+    env_file:
+      - .env
+    networks:
+      - backend
+    volumes:
+      - ./src/microservices/metahop-activity:/var/www/metahop-activity
+    command: npm run start:dev
+
+  metahop-course:
+    build: ./src/microservices/metahop-course
+    restart: always
+    hostname: metahop-course
+    env_file:
+      - .env
+    networks:
+      - backend
+    volumes:
+      - ./src/microservices/metahop-course:/var/www/metahop-course
+    command: npm run start:dev
+
+  migration-mysql:
+    build: ./src/microservices/migration-mysql
+    restart: always
+    hostname: migration-mysql
+    env_file:
+      - .env
+    networks:
+      - backend
+    volumes:
+      - ./src/microservices/migration-mysql:/var/www/migration-mysql
+    command: npm run start:dev
+
+  migration-mongo:
+    build: ./src/microservices/migration-mongo
+    restart: always
+    hostname: migration-mongo
+    env_file:
+      - .env
+    networks:
+      - backend
+    volumes:
+      - ./src/microservices/migration-mongo:/var/www/migration-mongo
+    command: npm run start:dev
+
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    external:
+      name: infrastructure

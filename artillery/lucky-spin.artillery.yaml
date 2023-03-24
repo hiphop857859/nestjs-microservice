@@ -1,0 +1,43 @@
+config:
+  target: "http://localhost:8092/graphql"
+  phases:
+    - duration: 500
+      arrivalRate: 40
+      maxVusers: 100
+scenarios:
+  - name: "Spin"
+    flow:
+      - post:
+          url: "/"
+          headers:
+            deviceId: '{{ $randomString() }}'
+          json:
+            query: |
+              mutation signUpGuest($input : SignUpGuestInput! ) {
+                signUpGuest(input : $input){
+                  accessToken,
+                  refreshToken
+                }
+              }
+            variables:
+              input:
+                deviceId: "{{ $randomString() }}"
+          capture:
+            json: "$.data.signUpGuest.accessToken"
+            as: "accessToken"
+
+      - post:
+          url: "/"
+          headers:
+            Authorization: 'Bearer {{accessToken}}'
+          json:
+            query: |
+             mutation playLuckySpin{
+              playLuckySpin {
+                _id,
+                giftId,
+                gift {
+                  _id
+                }
+              }
+              }

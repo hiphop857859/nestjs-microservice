@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "@nestjs/common": "^9.2.0",
+    "@nestjs/mapped-types": "*"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "e2e:activity": "cd src/microservices/activity && npm run test:e2e",
+    "e2e:quizz": "cd src/microservices/quizz && npm run test:e2e",
+    "e2e:shared": "cd src/microservices/shared && npm run test:e2e",
+    "e2e:user": "cd src/microservices/user && npm run test:e2e",
+    "e2e:bunny": "cd src/microservices/bunny && npm run test:e2e",
+    "e2e:event": "cd src/microservices/event && npm run test:e2e",
+    "e2e:course": "cd src/microservices/course && npm run test:e2e",
+    "e2e": "npm-run-all --parallel e2e:activity e2e:quizz e2e:shared e2e:user e2e:bunny e2e:event e2e:course"
+  },
+  "devDependencies": {
+    "husky": "^8.0.0",
+    "npm-run-all": "^4.1.5"
+  },
+  "version": "0.0.1"
+}

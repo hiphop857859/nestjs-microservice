@@ -1,0 +1,66 @@
+fullnameOverride: admin-gateway
+
+args: ["npm", "run", "start:prod"]
+
+extraEnvVars:
+  - name: JWT_TOKEN_SECRET
+    value: Met@hop@SecrEtKeyS
+  - name: JWT_TOKEN_EXPIRES
+    value: "30"
+  - name: ASSET_URL
+    value: https://assets.metahop.com
+  - name: DEFAULT_PAGE_SIZE
+    value: "20"
+  - name: QUIZZ_SERVICE_RABITMQ_URL
+    value: amqp://metahop_prod:JgpagP89Qw7DaKai@rabbitmq.data.svc.cluster.local:5672
+  - name: QUIZZ_SERVICE_RABITMQ_QUEUE
+    value: quizz_queue
+  - name: BUNNY_SERVICE_RABITMQ_URL
+    value: amqp://metahop_prod:JgpagP89Qw7DaKai@rabbitmq.data.svc.cluster.local:5672
+  - name: BUNNY_SERVICE_RABITMQ_QUEUE
+    value: bunny_queue  
+  - name: USER_SERVICE_RABITMQ_URL
+    value: amqp://metahop_prod:JgpagP89Qw7DaKai@rabbitmq.data.svc.cluster.local:5672
+  - name: USER_SERVICE_RABITMQ_QUEUE
+    value: user_queue
+  - name: EVENT_SERVICE_RABITMQ_URL
+    value: amqp://metahop_prod:JgpagP89Qw7DaKai@rabbitmq.data.svc.cluster.local:5672
+  - name: EVENT_SERVICE_RABITMQ_QUEUE
+    value: event_queue 
+  - name: SHARED_SERVICE_RABITMQ_URL
+    value: amqp://metahop_prod:JgpagP89Qw7DaKai@rabbitmq.data.svc.cluster.local:5672
+  - name: SHARED_SERVICE_RABITMQ_QUEUE
+    value: shared_queue   
+  - name: COURSE_SERVICE_RABITMQ_URL
+    value: amqp://metahop_prod:JgpagP89Qw7DaKai@rabbitmq.data.svc.cluster.local:5672
+  - name: COURSE_SERVICE_RABITMQ_QUEUE
+    value: course_queue  
+  - name: ACTIVITY_SERVICE_RABITMQ_URL
+    value: amqp://metahop_prod:JgpagP89Qw7DaKai@rabbitmq.data.svc.cluster.local:5672
+  - name: ACTIVITY_SERVICE_RABITMQ_QUEUE
+    value: activity_queue
+  - name: ORGANIZATION_SERVICE_RABITMQ_URL
+    value: amqp://metahop_prod:JgpagP89Qw7DaKai@rabbitmq.data.svc.cluster.local:5672
+  - name: ORGANIZATION_SERVICE_RABITMQ_QUEUE
+    value: organization_queue
+livenessProbe:
+  path: /health
+
+readinessProbe:
+  path: /health
+
+ingress:
+  enabled: true
+  ingressClassName: alb
+  pathType: Prefix
+  hostname: admin-api.metahop.io
+  path: /
+  annotations:
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/success-codes: "200"
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/group.name: metahop-prod
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-southeast-1:921270714038:certificate/0b1589a4-cae5-4e6a-9b71-26d5814a8543
